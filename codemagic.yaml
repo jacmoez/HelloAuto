@@ -16,23 +16,20 @@ workflows:
         script: rm -rf ~/Library/Developer/Xcode/DerivedData
       - name: Clean Flutter cache
         script: flutter clean
-      - name: Set architecture for builds
+      - name: Set architecture for simulator builds
         script: |
           export ARCHS="x86_64 arm64"
           export ONLY_ACTIVE_ARCH=NO
       - name: Build for simulator
         script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
+          xcodebuild clean -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphonesimulator \
             -configuration Release \
-            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
             ONLY_ACTIVE_ARCH=NO
       - name: Build for devices
         script: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
-            -configuration Release \
-            -destination 'generic/platform=iOS' \
-            ONLY_ACTIVE_ARCH=NO
+            -configuration Release
