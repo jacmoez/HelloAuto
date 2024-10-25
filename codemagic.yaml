@@ -26,10 +26,3 @@ workflows:
           export ONLY_ACTIVE_ARCH=NO
 
 
-      - name: Build for devices
-        script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release \
-            -allowProvisioningUpdates || exit 1 # Exit if the build fails
