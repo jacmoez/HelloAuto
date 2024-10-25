@@ -8,28 +8,36 @@ workflows:
         script: |
           git clone https://github.com/flutter/flutter.git -b stable --depth 1
           export PATH="$PATH:`pwd`/flutter/bin"
+          
       - name: Install Flutter dependencies
         script: |
           cd hellotest
           flutter pub get
+
       - name: Clean derived data
         script: rm -rf ~/Library/Developer/Xcode/DerivedData
+        
       - name: Clean Flutter cache
         script: flutter clean
+        
       - name: Set architecture for simulator builds
         script: |
           export ARCHS="x86_64 arm64"
           export ONLY_ACTIVE_ARCH=NO
+
       - name: Build for simulator
         script: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphonesimulator \
             -configuration Release \
-            ONLY_ACTIVE_ARCH=NO
+            ONLY_ACTIVE_ARCH=NO \
+            -allowProvisioningUpdates || exit 1 # Exit if the build fails
+
       - name: Build for devices
         script: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
-            -configuration Release
+            -configuration Release \
+            -allowProvisioningUpdates || exit 1 # Exit if the build fails
