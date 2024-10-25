@@ -25,13 +25,14 @@ workflows:
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iOS Simulator,OS=latest' \
+            -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max,OS=latest' \
             -configuration Release \
-            ONLY_ACTIVE_ARCH=NO -allowProvisioningUpdates
+            -allowProvisioningUpdates
+
       - name: Build for devices
         script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
+          xcodebuild archive -workspace ios/Runner.xcworkspace \
             -scheme Runner \
-            -sdk iphoneos \
             -configuration Release \
+            -archivePath build/Runner.xcarchive \
             -allowProvisioningUpdates
