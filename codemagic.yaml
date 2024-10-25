@@ -1,4 +1,3 @@
-
 workflows:
   ios-workflow:
     name: iOS Workflow
@@ -26,16 +25,13 @@ workflows:
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
             -configuration Release \
-            ONLY_ACTIVE_ARCH=NO
+            ONLY_ACTIVE_ARCH=NO -allowProvisioningUpdates
       - name: Build for devices
         script: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
-            -configuration Release
-      - name: Export app
-        script: |
-          mkdir -p output
-          cp -R ios/Runner.app output/
-          cp -R ios/Runner.app.dSYM output/
+            -configuration Release \
+            -allowProvisioningUpdates
