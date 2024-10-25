@@ -1,3 +1,4 @@
+
 workflows:
   ios-workflow:
     name: iOS Workflow
@@ -12,10 +13,15 @@ workflows:
         script: |
           cd hellotest
           flutter pub get
-      - name: Clean derived data
-        script: rm -rf ~/Library/Developer/Xcode/DerivedData
-      - name: Clean Flutter cache
-        script: flutter clean
+      - name: Clear Derived Data and Cache
+        script: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          rm -rf ios/Flutter/Flutter.framework
+          flutter clean
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios
+          pod install
       - name: Set architecture for builds
         script: |
           export ARCHS="x86_64 arm64"
@@ -27,7 +33,8 @@ workflows:
             -sdk iphonesimulator \
             -configuration Release \
             -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
-            ONLY_ACTIVE_ARCH=NO
+            ONLY_ACTIVE_ARCH=NO \
+            -UseModernBuildSystem=NO
       - name: Build for devices
         script: |
           xcodebuild -workspace ios/Runner.xcworkspace \
@@ -35,4 +42,6 @@ workflows:
             -sdk iphoneos \
             -configuration Release \
             -destination 'generic/platform=iOS' \
+            CODE_SIGN_STYLE=Automatic \
+            CODE_SIGN_IDENTITY="Apple Development" \
             ONLY_ACTIVE_ARCH=NO
