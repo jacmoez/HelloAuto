@@ -1,7 +1,8 @@
 workflows:
   ios_build:
     name: iOS Build
+    environment:
+      xcode: latest
     scripts:
       - xcodebuild clean build -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination 'generic/platform=iOS Simulator,name=iPhone 16 Plus' -arch arm64
-      - xcodebuild archive -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination 'generic/platform=iOS Simulator,name=iPhone 16 Plud' -arch x86_64
-      - xcodebuild -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination generic/platform=iOS -archivePath YourArchive.xcarchive
+      - xcodebuild archive -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination 'generic/platform=iOS Simulator,name=iPhone 16 Plus' -archivePath YourArchive.xcarchive -arch x86_64
