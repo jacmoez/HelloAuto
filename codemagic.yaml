@@ -1,38 +1,14 @@
 workflows:
-  ios-workflow:
-    name: iOS Workflow
+  ios_build:
+    name: iOS Build
+    instance_type: mac_mini_m2
     environment:
-      xcode: latest
+      CODE_SIGNING_IDENTITY: "iPhone Developer"
+      CODE_SIGNING_IDENTITY_DEVELOPMENT: "iPhone Developer"
+      CODE_SIGNING_IDENTITY_AD_HOC: "iPhone Distribution"
+      PROVISIONING_PROFILE_DEVELOPMENT: "YOUR_DEVELOPMENT_PROFILE"
+      PROVISIONING_PROFILE_AD_HOC: "YOUR_AD_HOC_PROFILE"
     scripts:
-      - name: Install Flutter
-        script: |
-          git clone https://github.com/flutter/flutter.git -b stable --depth 1
-          export PATH="$PATH:`pwd`/flutter/bin"
-      - name: Install Flutter dependencies
-        script: |
-          cd hellotest
-          flutter pub get
-      - name: Clean derived data
-        script: rm -rf ~/Library/Developer/Xcode/DerivedData
-      - name: Clean Flutter cache
-        script: flutter clean
-      - name: Set architecture for simulator builds
-        script: |
-          export ARCHS="x86_64 arm64"
-          export ONLY_ACTIVE_ARCH=NO
-      - name: Build for simulator
-        script: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 14 Pro Max,OS=latest' \
-            -configuration Release \
-            -allowProvisioningUpdates
-
-      - name: Build for devices
-        script: |
-          xcodebuild archive -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -configuration Release \
-            -archivePath build/Runner.xcarchive \
-            -allowProvisioningUpdates
+      - xcodebuild clean build -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination 'generic/platform=iOS Simulator,name=iPhone 14 Pro Max' -arch arm64
+      - xcodebuild archive -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination 'generic/platform=iOS Simulator,name=iPhone 14 Pro Max' -arch x86_64
+      - xcodebuild -workspace YourWorkspace.xcworkspace -scheme YourScheme -configuration Release -destination generic/platform=iOS -archivePath YourArchive.xcarchive
